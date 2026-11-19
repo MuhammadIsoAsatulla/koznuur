@@ -1,3 +1,10 @@
+FROM node:24-slim AS frontend
+WORKDIR /ui
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
 FROM python:3.12-slim
 WORKDIR /srv/koznur
 RUN apt-get update && apt-get install -y --no-install-recommends curl unzip libgomp1 libgl1 libglib2.0-0 && rm -rf /var/lib/apt/lists/*
@@ -8,5 +15,6 @@ RUN bash scripts/fetch_reference_model.sh && rm backend/models/aptos_winner/se_r
 COPY backend/app backend/app
 COPY backend/samples/*.json backend/samples/
 WORKDIR /srv/koznur/backend
+COPY --from=frontend /ui/dist /srv/koznur/frontend/dist
 EXPOSE 8000
 CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port \"${PORT:-8000}\""]

@@ -1,12 +1,8 @@
-# Deploy KoʻzNur from a new GitHub repository
+# Deploy KoʻzNur on Vercel
 
-The repository root contains the Vercel configuration for the React frontend and a Dockerfile for the FastAPI inference service. The five model checkpoints occupy 512 MB before Python or PyTorch is included. Run inference on a separate container host with enough memory for the five models. The browser sends each selected retinal image directly to that service.
+Import the GitHub repository at its root. The container preset in `vercel.json` builds the root Dockerfile. The first stage compiles the React console. The runtime stage installs CPU PyTorch, downloads the five reference checkpoints from the publisher, and starts FastAPI. FastAPI serves the console and the API at the same HTTPS origin. Leave `VITE_API_BASE` empty for this setup.
 
-1. Upload the source files to your new repository, including dotfiles and the frontend lockfile. The model download script retrieves the weights from the original publisher during the API image build.
-2. Deploy the root Dockerfile on your container host and enable HTTPS. The server listens on the host-provided PORT or 8000. Verify that GET /health returns model_loaded set to true. Startup loads all five folds.
-3. Import the GitHub repository into Vercel. Keep the root directory at the repository root. Set VITE_API_BASE to the public HTTPS API origin in the deployment environments you intend to use. Deploy. Vercel reads the install command, build command and output directory from vercel.json.
-4. Set KOZNUR_CORS_ORIGINS on the API host to the exact Vercel production origin, including https://, and restart the API. Add any permitted preview origins as a comma-separated list. Redeploy the frontend when its API address changes.
-5. Open the Vercel site, upload a retinal image, and check the grade, referral and heatmap switch. Check the browser network panel if the model is ready but the website cannot reach it.
+Verify that `GET /health` reports `model_loaded: true`. Upload a small demo image and check the grade, referral, and heatmap. Vercel Functions limit the entire request body to 4.5 MB, including multipart overhead. For larger original images, deploy the Dockerfile to a host supporting the API’s 20 MB application limit.
 
 ## Gallery
 
