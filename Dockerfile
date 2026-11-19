@@ -16,5 +16,6 @@ COPY backend/app backend/app
 COPY backend/samples/*.json backend/samples/
 WORKDIR /srv/koznur/backend
 COPY --from=frontend /ui/dist /srv/koznur/frontend/dist
+RUN python -c 'from app.main import dr_model; dr_model.load()'
 EXPOSE 8000
 CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port \"${PORT:-8000}\""]

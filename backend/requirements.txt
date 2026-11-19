@@ -16,6 +16,7 @@ python-multipart>=0.0.9        # required by FastAPI for multipart/form-data upl
 
 torch>=2.2
 torchvision>=0.17
+six>=1.16,<2                  # imported by pretrainedmodels.datasets.voc
 pretrainedmodels==0.7.4       # SE-ResNeXt50 architecture used by model_runner
 
 transformers>=4.38,<5.0
