@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --hairline: rgba(11, 27, 58, 0.12);
+    --hairline-strong: rgba(11, 27, 58, 0.18);
+    --hairline-dark: rgba(255, 255, 255, 0.08);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-exam-50 font-sans text-ink antialiased;
+    margin: 0;
+    min-height: 100vh;
+    /* Faint engineering grid across the whole console — reads as instrument bench. */
+    background-color: #eef2f3;
+    background-image:
+      linear-gradient(to right, rgba(11, 27, 58, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(11, 27, 58, 0.035) 1px, transparent 1px);
+    background-size: 38px 38px;
+  }
+
+  /* Numerics are ALWAYS monospace + tabular — the instrument signature. */
+  .num {
+    font-family: theme('fontFamily.mono');
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1, 'zero' 1;
+  }
+}
+
+@layer components {
+  /* Uppercase tracked micro-label — used across every panel header. */
+  .micro-label {
+    @apply font-mono text-[0.70rem] font-medium uppercase tracking-[0.09em];
+  }
+
+  /* Hairline rule helpers */
+  .rule-x {
+    @apply border-b;
+    border-color: var(--hairline);
+  }
+
+  /* Skeleton shimmer on light surfaces */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: theme('colors.exam.100');
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.7),
+      transparent
+    );
+    animation: skeleton-sweep 1.5s ease-in-out infinite;
+  }
+  @keyframes skeleton-sweep {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Skeleton on the dark stage */
+  .skeleton-dark {
+    position: relative;
+    overflow: hidden;
+    background: theme('colors.shell.700');
+  }
+  .skeleton-dark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.08),
+      transparent
+    );
+    animation: skeleton-sweep 1.5s ease-in-out infinite;
+  }
+}
+
+/* Quiet, clinical scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(11, 27, 58, 0.18);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(11, 27, 58, 0.3);
+}
+
+button:focus-visible, summary:focus-visible, [role='button']:focus-visible {
+  outline: 3px solid #3986e8;
+  outline-offset: 3px;
+}
+
+/* Reduced motion — kill all purposeful animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
